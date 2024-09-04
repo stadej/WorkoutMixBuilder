@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/WorkoutMixBuilder/static/css/main.947dcc1c.css",
+    "main.js": "/WorkoutMixBuilder/static/js/main.175bfbde.js",
+    "static/media/runner.svg": "/WorkoutMixBuilder/static/media/runner.63e084bd705bab39d38ee31b42f8863f.svg",
+    "index.html": "/WorkoutMixBuilder/index.html",
+    "main.947dcc1c.css.map": "/WorkoutMixBuilder/static/css/main.947dcc1c.css.map",
+    "main.175bfbde.js.map": "/WorkoutMixBuilder/static/js/main.175bfbde.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.947dcc1c.css",
+    "static/js/main.175bfbde.js"
+  ]
+}
