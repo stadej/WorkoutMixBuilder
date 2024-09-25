@@ -161,6 +161,7 @@ const NumberInputContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: ${(props) => props.alignStart ? 'flex-start' : 'flex-end'};
+    padding: 5px;
 `
 
 const SubmitButton = styled.button`

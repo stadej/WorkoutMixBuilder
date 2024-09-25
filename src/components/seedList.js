@@ -30,6 +30,7 @@ const SeedListContent = styled.div`
     padding: 10px;
     scrollbar-gutter: stable;
     overflow-y: auto;
+    overflow-x: hidden;
 `;
 
 const AddButtonContainer = styled.div`

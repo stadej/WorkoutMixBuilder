@@ -5,9 +5,10 @@ import propTypes from 'prop-types';
 const ElementContainer = styled.div`
 	position: relative;
     width: 100%;
+    height: max-content;
     box-sizing: border-box;
 	display: flex;
-	align-items: center;  
+	align-items: center;
     flex-direction: row;
     justify-content: flex-start;
     border: white solid 1px;
@@ -25,16 +26,14 @@ const ThumbnailImage = styled.img`
 `;
 
 const ElementName = styled.div`
-    width: inherit;
+    width: 100%;
     font-size: 25px;
     font-weight: bold;
     overflow-wrap: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
 `;
 
 const OtherText = styled.div`
-    width: inherit;
+    width: 100%;
     font-size: 15px;
     white-space: nowrap;
     overflow-wrap: break-word;
@@ -43,10 +42,11 @@ const OtherText = styled.div`
 `;
 
 const DescriptionContainer = styled.div`
+    width: ${(props) => props.buttonStyle ? "calc(100% - 122px)": "calc(100% - 82px)"};
+    box-sizing: border-box;
     display: flex;
 	align-items: flex-start;  
     flex-direction: column;
-    width: 100%;
     gap: 5px;
 `;
 
@@ -65,7 +65,9 @@ export default function ListElement({seed, onClick, buttonStyle}) {
     return(
         <ElementContainer>
            <ThumbnailImage src={seed.image_source}/>
-           <DescriptionContainer>
+           <DescriptionContainer
+                buttonStyle={buttonStyle}
+           >
                 <ElementName>{seed.name}</ElementName>
                 <OtherText>{seed.type}</OtherText>
                 <OtherText>id: {seed.spotify_id}</OtherText>
