@@ -1,4 +1,4 @@
-import {React, useState} from 'react';
+import {React, useState, useEffect} from 'react';
 import styled from 'styled-components';
 import SeedSearch from './seedSearch.js';
 import SeedList from './seedList.js';
@@ -8,44 +8,94 @@ const ContentWindow = styled.div`
     position: relative;
     box-sizing: border-box;
     display: flex;
-    direction: row;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
     margin: 20px;
     height: calc(100vh - min(100px, 10vw) - 42px);
-    width: 90vw;
+    width: 100vw;
+`;
+
+const ContentContainer = styled.div`
+	position: relative;
+	height: ${(props) => props.tabs ? "calc(100% - 34px - 1vw)": "100%"};
+    box-sizing: border-box;
+    color: white;
+	display: flex;
+	align-items: center;  
+    flex-direction: row;
+    padding: 20px;
+    gap: 20px;
+    border: white solid 2px;
+    border-radius: ${(props) => props.tabs ? "0px 0px 10px 10px": "10px"};
+    border-top: ${(props) => props.tabs ? "0px": "white solid 2px"};
+    container-type: inline-size;
+    width: 1000px;
 
     @media (max-width: 1000px){
-        width: 100vw;
+        width: calc(100vw - 40px);
+        padding: calc(1vw + 10px) 2vw;
     }
-
 `;
 
 const TabContainer = styled.div`
 	position: relative;
-	height: 100%;
     box-sizing: border-box;
+    height: 100%;
     color: white;
 	display: flex;
 	align-items: center;  
     flex-direction: column;
     justify-content: start;
-    padding: 20px;
     gap: 20px;
-    border: white solid 2px;
-    border-radius: 10px;
     container-type: inline-size;
     min-width: 300px;
 
     width: ${(props) => {
-        switch(props.tabs){
+        switch(props.tabcount){
             case(1):
                 return(`100%`);
             case(2):
-                return(`45%`);
-            case(3):
-                return(`30%`);
+                return(`50%`);
         }
     }};
+
+    @media (max-width: 1000px){
+        width: 100%;
+        gap: 2vw;
+    }
+`;
+
+const TabButtonContainer = styled.div`
+	position: relative;
+	display: flex;
+	align-items: center;  
+    flex-direction: row;
+    justify-content: space-around;
+    width: calc(100vw - 40px);
+`;
+
+const TabButton = styled.button`
+    position: relative;
+    width: 50%;
+    font-size: calc(10px + 1vw);
+    background-color: dimgray;
+    color: white;
+    border: white solid 2px;
+    border-radius: 10px 10px 0px 0px;
+    padding: 10px;
+
+    &:hover:enabled {
+        background-color: white;
+        color: dimgray;
+        cursor: pointer;
+    }
+
+    &:disabled {
+        background-color: #0077b6;
+        border-bottom: #0077b6 solid 2px;
+        cursor: default;
+    }
 `;
 
 const FormHeaderText = styled.div`
@@ -60,6 +110,10 @@ const HeaderText = styled.div`
     text-align: flex-start;
     font-size: 25px;
     font-weight: bold;
+
+    @media (max-width: 1000px){
+        font-size: calc(15px + 1vw);
+    }
 `;
 
 const SeedListContainer = styled.div`
@@ -165,13 +219,17 @@ const NumberInputContainer = styled.div`
 `
 
 const SubmitButton = styled.button`
-    width: 50%;
+    width: fit-content;
     font-size: 20px;
     border: white solid 1px;
     border-radius: 10px;
     background-color: #0077b6;
     color: white;
     padding: 10px;
+
+    @media (max-width: 1000px){
+        font-size: calc(10px + 1vw);
+    }
 
     &:hover:enabled {
         background-color: white;
@@ -219,6 +277,31 @@ export default function PreferenceForm() {
     const [maxBpm, setMaxBpm] = useState(160);
     const [numSongs, setNumSongs] = useState(10);
 
+    const [isMobile, setIsMobile] = useState(false);
+ 
+    const handleResize = () => {
+        if (window.innerWidth < 1000) {
+            setIsMobile(true)
+        } else {
+            setIsMobile(false);
+        }
+    };
+
+    useEffect(() => {
+        handleResize();
+        window.addEventListener("resize", handleResize);
+    },[]);
+
+    useEffect(() => {
+        if (isMobile && seedSearch === 1 && preferenceForm === 1){
+            setseedSearch(0);
+        }
+        if (!isMobile && playlistFlag === 0){
+            setseedSearch(1);
+            setPreferenceForm(1);
+        }
+    },[isMobile]);
+
     const addSeed = (seed) => {
         if(seeds.length < 5){
             setSeeds([...seeds, seed]);
@@ -262,115 +345,143 @@ export default function PreferenceForm() {
                 type: r.artists.map((a) => a.name).join(', '),
                 image_source: r.album ? r.album.images.at(0).url :
                     'https://st.depositphotos.com/2167093/3949/v/450/depositphotos_39499013-stock-illustration-music-note-icon-flat-design.jpg'
-        }}); 
+        }});
+        setseedSearch(0); 
+        setPreferenceForm(0); 
         setPlaylistFlag(1);
         setPlaylist(transformedResults);
     };
 
     return(
         <ContentWindow>
-            {seedSearch === 1 &&
-                <TabContainer
-                    tabs={seedSearch + preferenceForm + playlistFlag}
-                >
-                    <SeedSearch
-                        handleAdd={addSeed}
-                        handleClose={() => setseedSearch(0)}
-                    />
-                </TabContainer>
-            }
-            <TabContainer
-                tabs={seedSearch + preferenceForm + playlistFlag}
+            {isMobile && playlistFlag === 0 &&
+                <TabButtonContainer>
+                    <TabButton
+                        onClick={() => {
+                            setseedSearch(1); 
+                            setPreferenceForm(0); 
+                        }}
+                        disabled={seedSearch === 1}
+                    >
+                        Search
+                    </TabButton>
+                    <TabButton
+                        onClick={() => {
+                            setseedSearch(0); 
+                            setPreferenceForm(1); 
+                        }}
+                        disabled={preferenceForm === 1}
+                    >
+                        Preferences
+                    </TabButton>
+                </TabButtonContainer>
+            } 
+            <ContentContainer
+                tabs={isMobile && playlistFlag === 0}
             >
-                <FormHeaderText>Playlist Preferences</FormHeaderText>
-                <SeedListContainer>
-                    <HeaderText>Seeds</HeaderText>
-                    <SeedList
-                        seeds={seeds}
-                        onClick={removeSeed}
-                        buttonStyle='red'
-                        emptyMessage='You have not added any seeds'
-                        canAdd={seeds.length < 5}
-                        addMessage='Add a Seed +'
-                        onAdd={() => setseedSearch(1)}
-                    />
-                </SeedListContainer>
-                <TempoRangeContainer>
-                    <HeaderText>Tempo Range</HeaderText>
-                    <SliderContainer>
-                        <Slider 
-                            type="range" 
-                            value={minBpm} 
-                            onChange={controlMinInput}
-                            min="60" 
-                            max="240"
-                            below={minBpm < 240}
-                            minPercent={Math.ceil(((minBpm-60)/180)*100)}
-                            maxPercent={Math.floor(((maxBpm-60)/180)*100)}
+                {seedSearch === 1 &&
+                    <TabContainer
+                        tabcount={seedSearch + preferenceForm}
+                    >
+                        <SeedSearch
+                            handleAdd={addSeed}
+                            handleClose={() => setseedSearch(0)}
                         />
-                        <MaxSlider 
-                            type="range" 
-                            value={maxBpm}
-                            onChange={controlMaxInput} 
-                            min="60" 
-                            max="240"
-                        />
-                    </SliderContainer>
-                    <FormContainer>
-                        <NumberInputContainer alignStart>
-                            <label for="minInput">Min bpm</label>
-                            <NumberForm
-                                id="minInput"
-                                type="number" 
-                                value={minBpm}
-                                onInput={controlMinInput}
-                                min="60" 
-                                max={maxBpm}
+                    </TabContainer>
+                }
+                {preferenceForm === 1 &&
+                    <TabContainer
+                        tabcount={seedSearch + preferenceForm}
+                    >
+                        <SeedListContainer>
+                            <HeaderText>Seeds</HeaderText>
+                            <SeedList
+                                seeds={seeds}
+                                onClick={removeSeed}
+                                buttonStyle='red'
+                                emptyMessage='You have not added any seeds'
+                                canAdd={seeds.length < 5}
+                                addMessage='Add a Seed +'
                             />
-                        </NumberInputContainer>
-                        <NumberInputContainer>
-                            <label for="maxInput">Max bpm</label>
+                        </SeedListContainer>
+                        <TempoRangeContainer>
+                            <HeaderText>Tempo Range</HeaderText>
+                            <SliderContainer>
+                                <Slider 
+                                    type="range" 
+                                    value={minBpm} 
+                                    onChange={controlMinInput}
+                                    min="60" 
+                                    max="240"
+                                    below={minBpm < 240}
+                                    minPercent={Math.ceil(((minBpm-60)/180)*100)}
+                                    maxPercent={Math.floor(((maxBpm-60)/180)*100)}
+                                />
+                                <MaxSlider 
+                                    type="range" 
+                                    value={maxBpm}
+                                    onChange={controlMaxInput} 
+                                    min="60" 
+                                    max="240"
+                                />
+                            </SliderContainer>
+                            <FormContainer>
+                                <NumberInputContainer alignStart>
+                                    <label for="minInput">Min bpm</label>
+                                    <NumberForm
+                                        id="minInput"
+                                        type="number" 
+                                        value={minBpm}
+                                        onInput={controlMinInput}
+                                        min="60" 
+                                        max={maxBpm}
+                                    />
+                                </NumberInputContainer>
+                                <NumberInputContainer>
+                                    <label for="maxInput">Max bpm</label>
+                                    <NumberForm 
+                                        id="maxInput"
+                                        type="number"
+                                        value={maxBpm} 
+                                        onInput={controlMaxInput} 
+                                        min={minBpm} 
+                                        max="240"
+                                    />
+                                </NumberInputContainer>
+                            </FormContainer>
+                        </TempoRangeContainer>
+                        <FormContainer>
+                            <HeaderText>Number of Songs</HeaderText>
                             <NumberForm 
                                 id="maxInput"
                                 type="number"
-                                value={maxBpm} 
-                                onInput={controlMaxInput} 
-                                min={minBpm} 
-                                max="240"
+                                value={numSongs} 
+                                onInput={(e) => setNumSongs(Number(e.target.value))} 
+                                min="1"
+                                max="100"
                             />
-                        </NumberInputContainer>
-                    </FormContainer>
-                </TempoRangeContainer>
-                <FormContainer>
-                    <HeaderText>Number of Songs</HeaderText>
-                    <NumberForm 
-                        id="maxInput"
-                        type="number"
-                        value={numSongs} 
-                        onInput={(e) => setNumSongs(Number(e.target.value))} 
-                        min="1"
-                        max="100"
-                    />
-                </FormContainer>
-                <SubmitButton
-                    disabled={seeds.length < 1}
-                    onClick={handleSubmit}
-                >
-                    Generate Playlist
-                </SubmitButton>
-            </TabContainer>
-            {playlist.length > 0 &&
-                (<TabContainer
-                    tabs={seedSearch + preferenceForm + playlistFlag}
-                >
-                    <h2>here's your playlist lmao</h2>
-                    <SeedList
-                        seeds={playlist}
-                        buttonStyle={false}
-                        canAdd={false}
-                    />
-                </TabContainer>)
-            }
+                        </FormContainer>
+                        <SubmitButton
+                            disabled={seeds.length < 1}
+                            onClick={handleSubmit}
+                        >
+                            Generate Playlist
+                        </SubmitButton>
+                    </TabContainer>
+                }
+                {playlistFlag === 1 &&
+                    (<TabContainer
+                        tabcount={playlistFlag}
+                    >
+                        <h2>here's your playlist lmao</h2>
+                        <SeedList
+                            seeds={playlist}
+                            buttonStyle={false}
+                            canAdd={false}
+                        />
+                    </TabContainer>)
+                }
+            </ContentContainer>
         </ContentWindow>
     );
 }

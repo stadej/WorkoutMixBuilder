@@ -42,7 +42,7 @@ const AddButtonContainer = styled.div`
 `;
 
 const AddSeedButton = styled.button`
-    width: 50%;
+    width: fit-content;
     font-size: 20px;
     border: white solid 1px;
     border-radius: 10px;
@@ -56,9 +56,13 @@ const AddSeedButton = styled.button`
         color: #0077b6;
         cursor: pointer;
     }
+
+    @media (max-width: 1000px){
+        font-size: calc(10px + 1vw);
+    }
 `;
 
-export default function SeedList({seeds, loading, onClick, buttonStyle, emptyMessage, canAdd, addMessage, onAdd}){
+export default function SeedList({seeds, loading, onClick, buttonStyle, emptyMessage}){
     return(
         <SeedListContainer>
             <SeedListContent>
@@ -75,15 +79,6 @@ export default function SeedList({seeds, loading, onClick, buttonStyle, emptyMes
                 {seeds.length === 0 && 
                 !loading &&
                     (<h3>{emptyMessage}</h3>)
-                }
-                {canAdd && !loading &&
-                    (<AddButtonContainer>
-                        <AddSeedButton
-                            onClick={() => onAdd()}
-                        >
-                            {addMessage}
-                        </AddSeedButton>
-                    </AddButtonContainer>)
                 }
                 {loading &&
                     (<Spinner animation="border" variant="light" />)

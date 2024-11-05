@@ -210,11 +210,6 @@ export default function SeedSearch({handleAdd, handleClose}) {
 
     return(
         <SeedSearchContainer>
-            <CloseWindowContainer>
-                <CloseWindowButton
-                    onClick={handleClose}
-                >X</CloseWindowButton>
-            </CloseWindowContainer>
             <SearchBarContainer>
                 <SearchBar
                     type='text'

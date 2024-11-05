@@ -14,7 +14,6 @@ const ElementContainer = styled.div`
     border: white solid 1px;
     border-radius: 10px;
     padding: 10px;
-    min-width: 350px;
     gap: 10px;
 `;
 
@@ -23,6 +22,11 @@ const ThumbnailImage = styled.img`
     height: 70px;
     border: black solid 1px;
     border-radius: 5px;
+
+    @media (max-width: 1000px){
+        width: 70px;
+        height: 70px;
+    }
 `;
 
 const ElementName = styled.div`
@@ -30,6 +34,10 @@ const ElementName = styled.div`
     font-size: 25px;
     font-weight: bold;
     overflow-wrap: break-word;
+
+    @media (max-width: 1000px){
+        font-size: calc(15px + 1vw);
+    }
 `;
 
 const OtherText = styled.div`
