@@ -1,4 +1,4 @@
-Workout Mix Builder is a project built in React using the Spotify Web API
+Workout Mix Builder is a project built in React using the [Spotify Web API](https://developer.spotify.com/documentation/web-api)
 
 I love listening to music while I exercise, so I wanted to create this app to easily create customized playlists within a specified speed range.
 
