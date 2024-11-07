@@ -1,7 +1,5 @@
 import { Buffer } from "buffer";
-
-const clientId = 'ba4f361827b4425ab5f74e1878519e11';
-const clientSecret = 'fb7c438af1e8447c93a52bb1ded33c5b';
+import React from 'react';
 
 export const setToken = async () => {
   const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -11,7 +9,7 @@ export const setToken = async () => {
     }),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + (Buffer.from(clientId + ':' + clientSecret).toString('base64')),
+      'Authorization': 'Basic ' + (Buffer.from(process.env.REACT_APP_CLIENT_ID + ':' + process.env.REACT_APP_CLIENT_SECRET).toString('base64')),
     },
   });
 
