@@ -33,35 +33,6 @@ const SeedListContent = styled.div`
     overflow-x: hidden;
 `;
 
-const AddButtonContainer = styled.div`
-    position: relative;
-	display: flex;
-    flex-direction: column;
-    align-items: center; 
-    width: 100%;
-`;
-
-const AddSeedButton = styled.button`
-    width: fit-content;
-    font-size: 20px;
-    border: white solid 1px;
-    border-radius: 10px;
-    background-color: #0077b6;
-    color: white;
-    padding: 10px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: white;
-        color: #0077b6;
-        cursor: pointer;
-    }
-
-    @media (max-width: 1000px){
-        font-size: calc(10px + 1vw);
-    }
-`;
-
 export default function SeedList({seeds, loading, onClick, buttonStyle, emptyMessage}){
     return(
         <SeedListContainer>

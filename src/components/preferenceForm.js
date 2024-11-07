@@ -98,13 +98,6 @@ const TabButton = styled.button`
     }
 `;
 
-const FormHeaderText = styled.div`
-	position: relative;
-    text-align: center;
-    font-size: 40px;
-    font-weight: bold;
-`;
-
 const HeaderText = styled.div`
 	position: relative;
     text-align: flex-start;
@@ -219,13 +212,21 @@ const NumberInputContainer = styled.div`
 `
 
 const SubmitButton = styled.button`
-    width: fit-content;
     font-size: 20px;
     border: white solid 1px;
     border-radius: 10px;
     background-color: #0077b6;
     color: white;
     padding: 10px;
+
+    width: ${(props) => {
+        switch(props.buttoncount){
+            case(1):
+                return(`fit-content`);
+            case(2):
+                return(`45%`);
+        }
+    }};
 
     @media (max-width: 1000px){
         font-size: calc(10px + 1vw);
@@ -242,6 +243,15 @@ const SubmitButton = styled.button`
         color: dimgray;
         cursor: not-allowed;
     }
+`;
+
+const PlaylistButtonContainer = styled.div`
+	position: relative;
+    width: 100%;
+	display: flex;
+	align-items: center;  
+    flex-direction: row;
+    justify-content: space-around;
 `;
 
 const testSeeds = [
@@ -350,6 +360,14 @@ export default function PreferenceForm() {
         setPreferenceForm(0); 
         setPlaylistFlag(1);
         setPlaylist(transformedResults);
+    };
+
+    const handleBack = async () => {
+        setPlaylistFlag(0);
+        setPreferenceForm(1); 
+        if (!isMobile) {
+            setseedSearch(1); 
+        }
     };
 
     return(
@@ -464,6 +482,7 @@ export default function PreferenceForm() {
                         <SubmitButton
                             disabled={seeds.length < 1}
                             onClick={handleSubmit}
+                            buttoncount={1}
                         >
                             Generate Playlist
                         </SubmitButton>
@@ -473,7 +492,21 @@ export default function PreferenceForm() {
                     (<TabContainer
                         tabcount={playlistFlag}
                     >
-                        <h2>here's your playlist lmao</h2>
+                        <HeaderText>here's your playlist!</HeaderText>
+                        <PlaylistButtonContainer>
+                            <SubmitButton
+                                onClick={handleBack}
+                                buttoncount={2}
+                            >
+                                Back
+                            </SubmitButton>
+                            <SubmitButton
+                                onClick={handleSubmit}
+                                buttoncount={2}
+                            >
+                                New Playlist
+                            </SubmitButton>
+                        </PlaylistButtonContainer>
                         <SeedList
                             seeds={playlist}
                             buttonStyle={false}
