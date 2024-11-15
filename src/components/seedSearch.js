@@ -15,20 +15,25 @@ const SeedSearchContainer = styled.div`
     gap: 20px;
 `;
 
-const CloseWindowContainer = styled.div`
+const AlertContainer = styled.div`
 	position: relative;
-    height: 30px;
+    box-sizing: border-box;
+    font-size: 15px;
     width: 100%;
-    border: none;
+    background-color: red;
+    border-radius: 10px;
+    border: white solid 1px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 0px;
+    padding-inline: 10px;
 `;
 
 const CloseWindowButton = styled.button`
     width: 30px;
     height: 30px;
-    font-size: 20px;
     background: none;
     border: none;
     color: white;
@@ -103,7 +108,7 @@ const TypeButton = styled.button`
     }
 `;
 
-export default function SeedSearch({handleAdd, handleClose}) {
+export default function SeedSearch({handleAdd, alert, setAlert}) {
     const [type, setType] = useState('genre');
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
@@ -210,6 +215,18 @@ export default function SeedSearch({handleAdd, handleClose}) {
 
     return(
         <SeedSearchContainer>
+            {alert &&
+                <AlertContainer>
+                    You can only add up to five seeds.
+                    <CloseWindowButton
+                        onClick={() => {
+                            setAlert(false);
+                        }}
+                    >
+                        X
+                    </CloseWindowButton>
+                </AlertContainer>
+            }
             <SearchBarContainer>
                 <SearchBar
                     type='text'

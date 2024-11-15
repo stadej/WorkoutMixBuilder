@@ -288,6 +288,8 @@ export default function PreferenceForm() {
     const [numSongs, setNumSongs] = useState(10);
 
     const [isMobile, setIsMobile] = useState(false);
+
+    const [alert, setAlert] = useState(false);
  
     const handleResize = () => {
         if (window.innerWidth < 1000) {
@@ -316,12 +318,16 @@ export default function PreferenceForm() {
         if(seeds.length < 5){
             setSeeds([...seeds, seed]);
         }
+        else{
+            setAlert(true);
+        }
     };
 
     const removeSeed = (index) => {
         const newSeeds = [...seeds];
         newSeeds.splice(index, 1);
         setSeeds(newSeeds);
+        setAlert(false);
     };
 
     const controlMinInput = (e) => {
@@ -403,7 +409,8 @@ export default function PreferenceForm() {
                     >
                         <SeedSearch
                             handleAdd={addSeed}
-                            handleClose={() => setseedSearch(0)}
+                            alert={alert}
+                            setAlert={setAlert}
                         />
                     </TabContainer>
                 }
@@ -418,8 +425,7 @@ export default function PreferenceForm() {
                                 onClick={removeSeed}
                                 buttonStyle='red'
                                 emptyMessage='You have not added any seeds'
-                                canAdd={seeds.length < 5}
-                                addMessage='Add a Seed +'
+                                canAdd={false}
                             />
                         </SeedListContainer>
                         <TempoRangeContainer>
