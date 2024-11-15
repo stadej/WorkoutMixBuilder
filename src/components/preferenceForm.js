@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import SeedSearch from './seedSearch.js';
 import SeedList from './seedList.js';
 import {createPlaylist} from '../utils/spotifyUtils.js';
+import info from '../images/info.svg';
 
 const ContentWindow = styled.div`
     position: relative;
@@ -96,6 +97,61 @@ const TabButton = styled.button`
         border-bottom: #0077b6 solid 2px;
         cursor: default;
     }
+`;
+
+const TextContainer = styled.div`
+	position: relative;
+	display: flex;
+	align-items: end;  
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+`;
+
+const Icon = styled.img`
+	position: relative;
+	color: white;
+	object-fit: contain;
+	width: 20px;
+	height: 20px;
+
+    @media (max-width: 1000px) {
+		width: calc(10px + 1vw);
+		height: calc(10px + 1vw);
+    }
+`;
+
+const TextBlurb = styled.div`
+    display: none;
+	position: fixed;
+    top: 0px;
+    left: 75px;
+    font-size: 15px;
+    padding: 10px;
+    border: white solid 1px;
+    border-radius: 15px;
+    background-color: #0077b6;
+    color: white;
+    z-index: 3;
+
+    @media (max-width: 1000px){
+        left: calc(55px + 2vw);
+    }
+`;
+
+const IconButton = styled.button`
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+
+    &:hover ${TextBlurb} {
+        display: inline-block;
+    };
+    
+    &:active ${TextBlurb} {
+        display: inline-block;
+    };
 `;
 
 const HeaderText = styled.div`
@@ -419,7 +475,13 @@ export default function PreferenceForm() {
                         tabcount={seedSearch + preferenceForm}
                     >
                         <SeedListContainer>
-                            <HeaderText>Seeds</HeaderText>
+                            <TextContainer>
+                                <HeaderText>Seeds</HeaderText>
+                                <IconButton>
+                                    <Icon src={info}/>
+                                    <TextBlurb>Recommendations are generated based on the seeds you provide. To customize your playlist, you can add up to five seeds in any combination of genres, artists, and songs.</TextBlurb>
+                                </IconButton>
+                            </TextContainer>
                             <SeedList
                                 seeds={seeds}
                                 onClick={removeSeed}
@@ -429,7 +491,9 @@ export default function PreferenceForm() {
                             />
                         </SeedListContainer>
                         <TempoRangeContainer>
-                            <HeaderText>Tempo Range</HeaderText>
+                            <TextContainer>
+                                <HeaderText>Tempo Range</HeaderText>
+                            </TextContainer>
                             <SliderContainer>
                                 <Slider 
                                     type="range" 
